@@ -1,16 +1,15 @@
 #include "route_planner.h"
 #include <algorithm>
 
-RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, float end_x, float end_y): m_Model(model) {
+RoutePlanner::RoutePlanner(RouteModel &model, float startx, float starty, float endx, float endy): m_Model(model) {
     // Convert inputs to percentage:
-    start_x *= 0.01;
-    start_y *= 0.01;
-    end_x *= 0.01;
-    end_y *= 0.01;
+    startx *= 0.01;
+    starty *= 0.01;
+    endx *= 0.01;
+    endy *= 0.01;
 
-    // Store the nodes you find in the RoutePlanner's start_node and end_node attributes.
-  start_node=&m_Model.FindClosestNode(start_x,start_y);
-  end_node=& m_Model.FindClosestNode(end_x,end_y);
+  start_node=&m_Model.FindClosestNode(startx,starty);
+  end_node=& m_Model.FindClosestNode(endx,endy);
 
 }
 
@@ -22,16 +21,14 @@ float RoutePlanner::CalculateHValue(RouteModel::Node const *node){
 
 
 
-void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
-  current_node->FindNeighbors();
-   for(auto v : current_node->neighbors){
-     // set the parent to current node
-     v->parent = current_node;
-     // set the h_value from the calculate h value function
-     v->h_value = CalculateHValue(v);
-     v->g_value = current_node->g_value + current_node->distance(*v); 
-     open_list.push_back(v);
-     v->visited = true;
+void RoutePlanner::AddNeighbors(RouteModel::Node *cnode) {
+  cnode->FindNeighbors();
+   for(auto V : cnode->neighbors){
+     V->parent = cnode;
+     V->h_value = CalculateHValue(V);
+     V->g_value = cnode->g_value + cnode->distance(*V); 
+     open_list.push_back(V);
+     V->visited = true;
    }
 }
 
